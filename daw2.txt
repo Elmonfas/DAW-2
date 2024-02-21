@@ -1,0 +1,42 @@
+------ netplan 1 : ---------
+network:
+  ethernets:
+     enp0s3:
+       addresses:
+       - 192.168.1.72/24
+       dhcp4: false
+ version: 2
+
+
+------- netpan 2 :  ---------
+network:
+  ethernets:
+     enp0s3:
+       addresses:
+       - 192.168.1.73/24
+       dhcp4: false
+ version: 2
+
+
+
+
+balanceador.conf:
+upstream balanceador{
+  server 192.168.1.72;
+  server 192.168.1.73;
+}
+
+server{
+ listen 80;
+ location / {
+  proxy_pass http://balanceador
+ }
+}
+
+
+
+
+
+gunicorn comand:
+
+gunicorn -w 4 -b http://192.168.1.74 app:app
